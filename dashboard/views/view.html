@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>Live</title>
+	<script defer src="https://unpkg.com/peerjs@1.2.0/dist/peerjs.min.js"></script>
+</head>
+<body style="height: 100%; background-color: transparent;">
+	<img src="">
+	<audio id="out" controls style="opacity: 0;"></audio>
+
+
+	<script src="websocket.js"></script>
+	<script src="plugin/opus.js"></script>
+	<script src="plugin/xaudio.js"></script>
+	<script src="plugin/libopus.js"></script>
+	<script src="plugin/ws-audio-api.js"></script>
+
+	<script type="text/javascript">
+		const img = document.querySelector('img');
+		const wss = new webSocket('ws://localhost:2200');
+
+		wss.open();
+
+		var video = document.querySelector('video');
+
+		var player = new WSAudioAPI.Player();
+		player.start();
+
+		wss.on('video', (data) => {
+			img.src = data;
+		});
+	</script>
+
+</body>
+</html>
