@@ -17,20 +17,13 @@ let Website = class Website {
 
         app.use(express.static(path.join(__dirname, `${path.sep}dashboard${path.sep}public`)))
             .set('views', path.join(__dirname, `${path.sep}dashboard${path.sep}views`))
-            .engine("html", require("ejs").renderFile)
-            .set("view engine", "html")
             .set("port", this.config.website.port);
 
-        const renderTemplate = (res, req, template, data = {}) => {
+        const renderTemplate = (res, req, template) => {
             const baseData = {
                 path: req.path
             };
-            res.status(200).render(
-                path.resolve(__dirname + `${path.sep}dashboard${path.sep}views${path.sep}${template}`),
-                Object.assign(baseData, data),
-                (err, html) => {
-                    res.send(html);
-                });
+            res.status(200).sendFile(path.resolve(__dirname + `${path.sep}dashboard${path.sep}views${path.sep}${template}`));
         };
 
         app.get("/", async(req, res) => {
