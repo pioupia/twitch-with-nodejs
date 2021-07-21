@@ -2,10 +2,7 @@ let active = true;
 let inListenTouche = false;
 let focus;
 let paramsToConfig;
-const wss = new webSocket('ws://localhost:2200');
 const isCookie = getCookie('data');
-
-wss.open();
 
 let parameters = isCookie ?? {
     displayParams: 'e',
@@ -57,7 +54,7 @@ if (!isCookie) {
 const media = new mediaSharing(parameters);
 
 for (const name in parameters.translator) {
-    const theName = document.getElementById(name.replace(/App/g, ''));
+    const theName = document.getElementById(name.replaceAll('App', ''));
     theName.innerHTML = `${theName.innerHTML}<br> Touche actuelle : ${parameters[parameters.translator[name]]}`
 }
 
@@ -71,7 +68,7 @@ document.querySelectorAll('.configStream').forEach(name => {
                     media.stopVideo();
                     parameters.isVideoFlux = false;
                 } else {
-                    media.allowVideo()
+                    media.allowVideo();
                     parameters.isVideoFlux = true;
                 }
                 break;
@@ -273,4 +270,10 @@ for (let e of allAwaited) {
     }
 }
 
-media.createMedia();
+ecran.onclick = () => {
+    media.createMedia(true);
+}
+
+cam.onclick = () => {
+    media.createMedia(false);
+}
