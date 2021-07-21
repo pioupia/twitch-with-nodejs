@@ -4,16 +4,6 @@ class mediaSharing {
 		this.media = null;
 		this.video = null;
 
-		this.encoder = new OpusEncoder(this.config.codec.sampleRate, this.config.codec.channels, this.config.codec.app, this.config.codec.frameDuration);
-		this.sampler = new Resampler(44100, this.config.codec.sampleRate, 1, this.config.codec.bufferSize);
-		this.audioContext = new AudioContext();
-
-		this.audio = {
-			audioInput: null,
-			gainNode: null,
-			recorder: null
-		}
-
 		this.can = true;
 
 		this.sendFPS = null;
@@ -81,7 +71,7 @@ class mediaSharing {
         }*/
 	}
 
-	launchSendingAudio(){
+	/*launchSendingAudio(){
 
 		 	this.audio.audioInput = this.audioContext.createMediaStreamSource(this.media);
             this.audio.gainNode = this.audioContext.createGain();
@@ -201,5 +191,5 @@ class mediaSharing {
 
 	retourAdio(){
 		this.video.muted = !this.video.muted;
-	}
+	}*/
 }
