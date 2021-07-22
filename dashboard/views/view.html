@@ -11,29 +11,24 @@
 
 		mediaSource.addEventListener('sourceopen', sourceOpen);
 		const mime = "video/webm; codecs=\"vp8, vorbis\"";
+		const srcBfr = new Array();
 
 		async function sourceOpen () {
 			setInterval(async () => {
 				//let d = Date.now();
 				let data = await fetch("http://localhost:8080/playVideo");
 				data = await data.blob();
-
 				data = await data.arrayBuffer();
-				addBufferSource(data)
 
+				let sourceBuffer = srcBfr[0] || mediaSource.addSourceBuffer(mime);
+				if(!srcBfr[0]) srcBfr.push(sourceBuffer);
+
+				sourceBuffer.addEventListener('updateend', function (_) {
+					videoPlaying.play();
+				});
+
+				sourceBuffer.appendBuffer(data);
 			}, 2000);
-		}
-
-		addBufferSource = (data) => {
-			let sourceBuffer = mediaSource.addSourceBuffer(mime, data);
-
-			sourceBuffer.addEventListener('updateend', function (_) {
-				console.log(0)
-				mediaSource.endOfStream();
-				videoPlaying.play();
-
-				mediaSource.removeSourceBuffer(sourceBuffer);
-			});
 		}
 	</script>
 	</body>
