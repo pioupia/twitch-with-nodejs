@@ -52,7 +52,7 @@ let Website = class Website {
             const stream = fs.createReadStream(this.chunks?.reverse()?.[0]?.data);
             res.setHeader("content-type", "video/webm");
             stream.pipe(res);
-        })
+        });
 
         await app.listen(app.get("port"), () => {
             console.log(`Your website run on the URL : ${baseURL}`);

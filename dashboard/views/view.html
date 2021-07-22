@@ -6,19 +6,35 @@
 	<body style="height: 100%; background-color: transparent;">
 		<video id="videoPlaying" play></video>
 	<script>
-		setInterval(async () => {
-			let d = Date.now();
-			let data = await fetch("http://localhost:8080/playVideo");
-			data = await data.blob();
+		const mediaSource = new MediaSource();
+		videoPlaying.src = URL.createObjectURL(mediaSource);
 
-			setTimeout(() => {
-				videoPlaying.src = URL.createObjectURL(data);
-				videoPlaying.load();
-				videoPlaying.onloadeddata = function() {
-					videoPlaying.play();
-				}
-			}, 500 - (Date.now() - d))
-		}, 1800)
+		mediaSource.addEventListener('sourceopen', sourceOpen);
+		const mime = "video/webm; codecs=\"vp8, vorbis\"";
+
+		async function sourceOpen () {
+			setInterval(async () => {
+				//let d = Date.now();
+				let data = await fetch("http://localhost:8080/playVideo");
+				data = await data.blob();
+
+				data = await data.arrayBuffer();
+				addBufferSource(data)
+
+			}, 2000);
+		}
+
+		addBufferSource = (data) => {
+			let sourceBuffer = mediaSource.addSourceBuffer(mime, data);
+
+			sourceBuffer.addEventListener('updateend', function (_) {
+				console.log(0)
+				mediaSource.endOfStream();
+				videoPlaying.play();
+
+				mediaSource.removeSourceBuffer(sourceBuffer);
+			});
+		}
 	</script>
 	</body>
 </html>
