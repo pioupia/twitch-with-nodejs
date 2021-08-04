@@ -17,9 +17,7 @@ let Website = class Website {
         app.use(express.static(path.join(__dirname, `${path.sep}dashboard${path.sep}public`)))
             .use(
                 fileUpload({
-                    useTempFiles: true,
-                    tempFileDir: path.join(__dirname, 'tmp'),
-                    createParentPath: true,
+                    useTempFiles: false,
                     limits: { fileSize: 1 * 1024 * 1024 },
                 })
             )
