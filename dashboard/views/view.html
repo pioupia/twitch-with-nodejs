@@ -15,7 +15,6 @@
 
 		async function sourceOpen () {
 			setInterval(async () => {
-				//let d = Date.now();
 				let data = await fetch("http://localhost:8080/playVideo");
 				data = await data.blob();
 				data = await data.arrayBuffer();

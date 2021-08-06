@@ -3,6 +3,7 @@ const express = require("express"),
     config = require("./config"),
     app = express(),
     fileUpload = require('express-fileupload'),
+    { Duplex } = require('stream'),
     fs = require("fs");
 
 let Website = class Website {
@@ -38,16 +39,16 @@ let Website = class Website {
         app.post("/postStream", async (req, res) => {
             const fileProperty = req?.files?.file;
             if(!fileProperty?.data) return res.json(false);
-            this.chunks.push({size: fileProperty.size, data: fileProperty.tempFilePath});
+            this.chunks.push({size: fileProperty.size, data: fileProperty?.data});
             setTimeout(() => {
-                fs.rm(this.chunks[0].data, () => {});
                 this.chunks.splice(0, 1);
             }, 2000);
             return res.json(true);
         });
 
         app.get("/playVideo", (req, res) => {
-            const stream = fs.createReadStream(this.chunks?.reverse()?.[0]?.data);
+            const buffer = new Buffer.from(this.chunks?.reverse()?.[0]?.data, 'base64')
+            const stream = this.bufferToStream(buffer);
             res.setHeader("content-type", "video/webm");
             stream.pipe(res);
         });
@@ -56,6 +57,16 @@ let Website = class Website {
             console.log(`Your website run on the URL : ${baseURL}`);
         });
     }
+    /*
+        Convert a buffer to a readable stream to send it to front.
+     */
+    bufferToStream(myBuffer) {
+        let tmp = new Duplex();
+        tmp.push(myBuffer);
+        tmp.push(null);
+        return tmp;
+    }
+
 }
 
 new Website().start();
