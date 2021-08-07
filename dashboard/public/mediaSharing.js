@@ -4,18 +4,11 @@ class mediaSharing {
 		this.media = null;
 		this.video = null;
 
-		this.encoder = new OpusEncoder(this.config.codec.sampleRate, this.config.codec.channels, this.config.codec.app, this.config.codec.frameDuration);
-		this.sampler = new Resampler(44100, this.config.codec.sampleRate, 1, this.config.codec.bufferSize);
-		this.audioContext = new AudioContext();
-
 		this.audio = {
 			audioInput: null,
 			gainNode: null,
 			recorder: null
 		}
-
-		this.can = true;
-
 		this.sendFPS = null;
 	}
 
@@ -42,7 +35,7 @@ class mediaSharing {
 			video.play()
 		}
 
-		let mediaRecorder = new MediaRecorder(this.media, {"mimeType": "video/webm;"});
+		let mediaRecorder = new MediaRecorder(this.media, {"mimeType": "video/webm"});
 		mediaRecorder.ondataavailable = function(ev) {
 			chunks.push(ev.data);
 		}
@@ -53,7 +46,7 @@ class mediaSharing {
 		}, 2000);
 
 		mediaRecorder.onstop = () => {
-			let blob = new Blob(chunks, {'type': 'video/webm;'});
+			let blob = new Blob(chunks, {'type': 'video/mp4;'});
 			chunks = [];
 			const data = new FormData();
 			data.append('file', blob);

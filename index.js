@@ -47,9 +47,10 @@ let Website = class Website {
         });
 
         app.get("/playVideo", (req, res) => {
+            if(this?.chunks?.length < 1) return res.json(false);
             const buffer = new Buffer.from(this.chunks?.reverse()?.[0]?.data, 'base64')
             const stream = this.bufferToStream(buffer);
-            res.setHeader("content-type", "video/webm");
+            res.setHeader("content-type", "video/mp4");
             stream.pipe(res);
         });
 

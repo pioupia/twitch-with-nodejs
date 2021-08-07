@@ -10,7 +10,7 @@
 		videoPlaying.src = URL.createObjectURL(mediaSource);
 
 		mediaSource.addEventListener('sourceopen', sourceOpen);
-		const mime = "video/webm; codecs=\"vp8, vorbis\"";
+		const mime = "video/mp4;";
 		const srcBfr = new Array();
 
 		async function sourceOpen () {
@@ -23,8 +23,11 @@
 				if(!srcBfr[0]) srcBfr.push(sourceBuffer);
 
 				sourceBuffer.addEventListener('updateend', function (_) {
+					mediaSource.endOfStream();
 					videoPlaying.play();
 				});
+
+				console.log(data);
 
 				sourceBuffer.appendBuffer(data);
 			}, 2000);
