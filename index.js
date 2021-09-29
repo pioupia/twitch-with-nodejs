@@ -5,6 +5,7 @@ const express = require("express"),
     fileUpload = require('express-fileupload'),
     { Duplex } = require('stream'),
     fs = require("fs");
+let i = 0;
 
 let Website = class Website {
     constructor() {
@@ -38,13 +39,14 @@ let Website = class Website {
 
         app.post("/postStream", async (req, res) => {
             const fileProperty = req?.files?.file;
-            if(!fileProperty?.data) return res.json(false);
-            this.chunks.push({size: fileProperty.size, data: fileProperty?.data});
-            setTimeout(() => {
-                this.chunks.splice(0, 1);
-            }, 2000);
+            if(!fileProperty?.data || fileProperty.mimetype !== 'video/webm') return res.json(false);
+            this.chunks.push({ data: fileProperty?.data, id: i++, date: Date.now() });
             return res.json(true);
         });
+
+        app.get("/getStreamer", (req, res) => {
+            return res.json({count: i});
+        })
 
         app.get("/playVideo", (req, res) => {
             if(this?.chunks?.length < 1) return res.json(false);
@@ -57,6 +59,10 @@ let Website = class Website {
         await app.listen(app.get("port"), () => {
             console.log(`Your website run on the URL : ${baseURL}`);
         });
+
+        setInterval(() => {
+            this.chunks = this.chunks.filter(r => r.date+60000 >= Date.now());
+        }, 60*1000)
     }
     /*
         Convert a buffer to a readable stream to send it to front.
