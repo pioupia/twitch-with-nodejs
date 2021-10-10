@@ -3,35 +3,56 @@
 	<head>
 		<title>Live</title>
 	</head>
+	<link rel="stylesheet" href="css/view.css">
 	<body style="height: 100%; background-color: transparent;">
 		<video id="videoPlaying" play></video>
-	<script>
-		const mediaSource = new MediaSource();
-		videoPlaying.src = URL.createObjectURL(mediaSource);
+		<script>
+			const mediaSource = new MediaSource();
+			videoPlaying.src = URL.createObjectURL(mediaSource);
+			let streamerSegment = 0;
+			const queue = [];
 
-		mediaSource.addEventListener('sourceopen', sourceOpen);
-		const mime = "video/webm;";
-		const srcBfr = new Array();
+			mediaSource.addEventListener('sourceopen', sourceOpen);
+			var sourceBuffer;
+			const mime = "video/webm; codecs=\"vp8, vorbis\"";
 
-		async function sourceOpen () {
+			function fetchSegment(){
+				return fetch(`/playVideo${streamerSegment > 0 ? '?count='+streamerSegment : ''}`).then(res => res.arrayBuffer());
+			}
+
 			setInterval(async () => {
-				let data = await fetch("http://localhost:8080/playVideo");
-				data = await data.blob();
-				data = await data.arrayBuffer();
+				streamerSegment++;
+				if(sourceBuffer.updating) return;
+				let data = await fetchSegment();
 
-				let sourceBuffer = srcBfr[0] || mediaSource.addSourceBuffer(mime);
-				if(!srcBfr[0]) srcBfr.push(sourceBuffer);
-
-				sourceBuffer.addEventListener('updateend', function (_) {
-					mediaSource.endOfStream();
-					videoPlaying.play();
-				});
-
-				console.log(data);
+				if (queue.length > 0) return queue.push(data);
 
 				sourceBuffer.appendBuffer(data);
-			}, 2000);
-		}
-	</script>
+				videoPlaying.play();
+			}, 2000)
+
+			async function sourceOpen(){
+				let informations = await Promise.all([fetch("/getStreamer").then(res => res.json()), fetchSegment()]);
+				streamerSegment = informations[0].count;
+				let data = informations[1];
+				queue.push(data);
+				sourceBuffer = mediaSource.addSourceBuffer(mime);
+				sourceBuffer.mode = 'sequence';
+				sourceBuffer.addEventListener('updateend', onUpdateEnd);
+				sourceBuffer.onabort = (...e) => {
+					console.log(...e);
+				}
+				sourceBuffer.onerror = (...e) => {
+					console.log(...e);
+				}
+				videoPlaying.play();
+				sourceBuffer.appendBuffer(queue.shift());
+			}
+
+			function onUpdateEnd(){
+				if(queue.length < 1 || sourceBuffer.updating) return;
+					sourceBuffer.appendBuffer(queue.shift())
+			}
+		</script>
 	</body>
 </html>

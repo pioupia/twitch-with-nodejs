@@ -32,7 +32,12 @@ let Website = class Website {
 
         app.get("/", async(req, res) => {
             return renderTemplate(res, "index.html")
-        })
+        });
+
+        app.get("/panel", async(req, res) => {
+            return renderTemplate(res, "panel.html")
+        });
+
         app.get("/view", async(req, res) => {
             renderTemplate(res, "view.html");
         });
@@ -46,11 +51,14 @@ let Website = class Website {
 
         app.get("/getStreamer", (req, res) => {
             return res.json({count: i});
-        })
+        });
 
         app.get("/playVideo", (req, res) => {
             if(this?.chunks?.length < 1) return res.json(false);
-            const buffer = new Buffer.from(this.chunks?.reverse()?.[0]?.data, 'base64')
+            const buffer = new Buffer.from(
+                (req.query?.count && !isNaN(req.query?.count) && (req.query?.count??0) > 0) ?
+                    (this.chunks.find(r => r.id === req.query.count)||this.chunks?.reverse()?.[0]?.data) :
+                    this.chunks?.reverse()?.[0]?.data, 'base64')
             const stream = this.bufferToStream(buffer);
             res.setHeader("content-type", "video/webm");
             stream.pipe(res);
@@ -62,7 +70,7 @@ let Website = class Website {
 
         setInterval(() => {
             this.chunks = this.chunks.filter(r => r.date+60000 >= Date.now());
-        }, 60*1000)
+        }, 30*1000)
     }
     /*
         Convert a buffer to a readable stream to send it to front.
@@ -73,7 +81,6 @@ let Website = class Website {
         tmp.push(null);
         return tmp;
     }
-
 }
 
 new Website().start();

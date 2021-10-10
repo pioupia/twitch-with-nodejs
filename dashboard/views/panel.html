@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>Live</title>
+	<style type="text/css">
+		#params{
+			position: absolute;
+			background-color: #bdbcbc;
+			top: 25%;
+			left: 25%;
+			padding: 20px;
+			width: max-content;
+			border-radius: 10px;
+			height: 60%;
+			overflow-y: scroll;
+		}
+	</style>
+</head>
+<body>
+
+	<div id="params" style="display: none;">
+		<h1>Configuration des raccourcis claviers :</h1>
+		<div id="rac_clavier">
+			<div class="input">
+				<h4 id="confPanelTouche">Affichage du panel de configuration.</h4>
+				<span id="confPanelToucheApp" class="awaitClickListener">Appuyez ici pour configurer une touche.</span>
+			</div>
+			<div class="input">
+				<h4 id="confStreamOnTouche">Activer/désactiver le retour du stream.</h4>
+				<span id="confStreamOnToucheApp" class="awaitClickListener">Appuyez ici pour configurer une touche.</span>
+			</div>
+
+			<div class="input">
+				<h4 id="confAudioRetourOnTouche">Activer/désactiver l'audio du retour.</h4>
+				<span id="confAudioRetourOnToucheApp" class="awaitClickListener">Appuyez ici pour configurer une touche.</span>
+			</div>
+
+			<div class="input">
+				<h4 id="confShutDownOnTouche">Activer/désactiver le stream.</h4>
+				<span id="confShutDownOnToucheApp" class="awaitClickListener">Appuyez ici pour configurer une touche.</span>
+			</div>
+
+			<div class="input">
+				<h4 id="videoFluxTouche">Activer/désactiver le flux vidéo.</h4>
+				<span id="videoFluxToucheApp" class="awaitClickListener">Appuyez ici pour configurer une touche.</span>
+			</div>
+
+			<div class="input">
+				<h4 id="audioFluxTouche">Activer/désactiver le flux audio.</h4>
+				<span id="audioFluxToucheApp" class="awaitClickListener">Appuyez ici pour configurer une touche.</span>
+			</div>
+
+		</div>
+		<h1>Configuration du stream :</h1>
+		<div id="config_stream">
+			<div class="input">
+				<p>Stream activé :</p>
+				<input id="isStreamEnable"  class="configStream" type="checkbox" checked>
+			</div>
+			<div class="input">
+				<p>Retour activé :</p>
+				<input id="isRetour" class="configStream" type="checkbox" checked>
+			</div>
+			<div class="input">
+				<p>Retour audio activé :</p>
+				<input id="isAudioRetour" class="configStream" type="checkbox">
+			</div>
+			<div class="input">
+				<p>Flux vidéo activé :</p>
+				<input id="isVideoFlux" class="configStream" type="checkbox" checked>
+			</div>
+			<div class="input">
+				<p>Flux audio activé :</p>
+				<input id="isAudioFlux" class="configStream" type="checkbox" checked>
+			</div>
+		</div>
+		<h1>Configuration des spécificités stream :</h1>
+		<div id="config_txt_stream">
+			<div class="input">
+				<p>Nombre de fps idéal :</p>
+				<input id="fpsNumber" class="configTxtStream" value="60" type="text">
+			</div>
+			<div class="input">
+				<p>Nombre de fps max (pas une grande utilité) :</p>
+				<input id="MaxFpsNumber" class="configTxtStream" value="80" type="text">
+			</div>
+			<div class="input">
+				<p>Qualité de la vidéo :</p>
+				<select id="quality" class="configTxtStream" >
+					<option selected disabled>Choisir la qualité vidéo</option>
+					<option>3840x2160 (4k)</option>
+					<option>1920x1080 (full HD)</option>
+					<option>1280x720 (HD)</option>
+					<option>720x480 (SD)</option>
+				</select>
+				<button id="save">Enregistrer</button>
+			</div>
+			<div class="input">
+				<p>Volume audio :</p>
+				<input id="audioVolume" class="configTxtStream" value="100" type="text">
+			</div>
+		</div>
+	</div>
+
+	<button id="ecran">Lancer un partage d'écran</button>
+	<button id="cam">Lancer sa caméra</button>
+
+	<video style="pointerEvents: none;"></video>
+
+	<script src="functions.js"></script>
+	<script src="mediaSharing.js"></script>
+	<script src="scripts.js" defer></script>
+</body>
+</html>
