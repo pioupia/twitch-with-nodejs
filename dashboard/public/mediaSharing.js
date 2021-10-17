@@ -1,3 +1,5 @@
+const elStream = document.getElementsByClassName("stream")[0];
+
 class mediaSharing {
 	constructor(options, encoder, sampler){
 		this.config = options;
@@ -40,8 +42,13 @@ class mediaSharing {
 			chunks.push(ev.data);
 		}
 
-		setInterval(() => {
+		var interval = setInterval(() => {
 			mediaRecorder.stop();
+			if(this.media.active !== true) {
+				this.media = null;
+				elStream.classList.add("disable");
+				return clearInterval(interval);
+			}
 			mediaRecorder.start();
 		}, 2000);
 
@@ -57,6 +64,7 @@ class mediaSharing {
 		}
 
 		mediaRecorder.start();
+		elStream.classList.remove("disable");
         /*if(!this.can) return;
 
     	this.video = document.querySelector('video');

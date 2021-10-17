@@ -2,22 +2,9 @@
 <html>
 <head>
 	<title>Live</title>
-	<style type="text/css">
-		#params{
-			position: absolute;
-			background-color: #bdbcbc;
-			top: 25%;
-			left: 25%;
-			padding: 20px;
-			width: max-content;
-			border-radius: 10px;
-			height: 60%;
-			overflow-y: scroll;
-		}
-	</style>
+	<link rel="stylesheet" href="css/main.css">
 </head>
 <body>
-
 	<div id="params" style="display: none;">
 		<h1>Configuration des raccourcis claviers :</h1>
 		<div id="rac_clavier">
@@ -101,11 +88,38 @@
 			</div>
 		</div>
 	</div>
-
-	<button id="ecran">Lancer un partage d'écran</button>
-	<button id="cam">Lancer sa caméra</button>
-
-	<video style="pointerEvents: none;"></video>
+	<div class="main">
+		<div class="stream disable">
+			<div class="img_not_stream">
+				<div class="shadow z10">
+					<div class="first"></div>
+				</div>
+				<div class="shadow z9">
+					<div class="second"></div>
+				</div>
+				<div class="shadow z8">
+					<div class="third"></div>
+				</div>
+				<div class="shadow z5">
+					<div class="fourth"></div>
+				</div>
+				<div class="shadow z6">
+					<div class="second"></div>
+				</div>
+				<div class="shadow z7">
+					<div class="first"></div>
+				</div>
+				<div class="error_message">
+					<h2>Error : The stream is not available</h2>
+				</div>
+			</div>
+			<video style="pointerEvents: none;" muted></video>
+		</div>
+		<div class="options">
+			<button id="ecran">Lancer un partage d'écran</button>
+			<button id="cam">Lancer sa caméra</button>
+		</div>
+	</div>
 
 	<script src="functions.js"></script>
 	<script src="mediaSharing.js"></script>
