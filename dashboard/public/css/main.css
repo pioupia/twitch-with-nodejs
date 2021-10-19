@@ -15,10 +15,6 @@
   --gradient-color-1: #d25120;
   --gradient-color-2: #ff6a10;
   --gradient-color-3: #d2430f;
-  /*
-  #5636ea
-  #4e2cec
-   */
 }
 
 html, body {
@@ -35,10 +31,9 @@ html, body {
 
 .stream {
   width: 90%;
-  margin: 0 auto;
   display: block;
   height: 55vh;
-  margin-bottom: 30px;
+  margin: 0 auto 30px;
 }
 .stream video {
   width: -moz-available;
@@ -192,22 +187,49 @@ html, body {
 /* Reponsive */
 @media screen and (max-width: 1466px) {
   .stream.disable .error_message {
-    right: 30vh;
-  }
-}
-@media screen and (max-width: 1285px) {
-  .stream.disable .error_message {
-    right: 28vh;
-    font-size: 14px;
+    right: 32vh;
   }
 }
 @media screen and (max-width: 1118px) {
-  /*.stream.disable .error_message{
-    font-size: 10px;
-    right: 17.2%;
-  }*/
   .stream {
     height: 35vh;
+  }
+}
+@media screen and (max-width: 1051px) {
+  .stream.disable .error_message {
+    bottom: 65vh;
+    left: 35vh;
+  }
+}
+@media screen and (max-width: 819px) {
+  .stream.disable .error_message {
+    left: 20vh;
+  }
+}
+@media screen and (max-width: 614px) {
+  .stream.disable .error_message {
+    left: 10vh;
+    font-size: 12px;
+    bottom: 47vh;
+  }
+
+  .stream {
+    height: 25vh;
+  }
+}
+@media screen and (max-width: 450px) {
+  .options {
+    flex-direction: column;
+  }
+
+  .options button {
+    margin: 0 auto 10px;
+    width: max-content;
+  }
+
+  .stream.disable .error_message {
+    left: 6vh;
+    font-size: 10px;
   }
 }
 

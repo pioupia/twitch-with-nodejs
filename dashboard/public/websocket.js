@@ -6,11 +6,7 @@ class webSocket {
     }
 
     open() {
-        try {
-            this.ws = new WebSocket(this.url);
-        }catch(e){
-            return this.reconnected();
-        }
+        this.ws = new WebSocket(this.url);
 
         this.ws.onopen = () => {
             console.log('WebSocket open');
@@ -18,7 +14,7 @@ class webSocket {
         }
 
         this.ws.onmessage = (data) => {
-            let parsed;
+            var parsed;
             try{
                 parsed = JSON.parse(data.data);
                 this.emit(parsed.event, parsed.data);
@@ -44,10 +40,10 @@ class webSocket {
 
         setTimeout(() => {
             if (this.ws.readyState == this.ws.OPEN) return;
-            const intervalConnectWS = setInterval(() => {
-                if (this.ws.readyState == this.ws.OPEN) return clearInterval(intervalConnectWS);
+            var intervallConnectWS = setInterval(() => {
+                if (this.ws.readyState == this.ws.OPEN) return clearInterval(intervallConnectWS);
                 this.open()
-            }, 1000);
+            }, 1000)
         }, 4 * 1000)
     }
 

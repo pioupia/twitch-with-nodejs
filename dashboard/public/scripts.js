@@ -2,7 +2,15 @@ let active = true;
 let inListenTouche = false;
 let focus;
 let paramsToConfig;
+var mediaRecorder;
+var wss = new webSocket('ws://localhost:2200');
+var audioContext = new(window.AudioContext || window.webkitAudioContext);
 const isCookie = getCookie('data');
+
+wss.open();
+
+var streamAttach;
+
 
 let parameters = isCookie ?? {
     displayParams: 'e',
@@ -54,7 +62,7 @@ if (!isCookie) {
 const media = new mediaSharing(parameters);
 
 for (const name in parameters.translator) {
-    const theName = document.getElementById(name.replaceAll('App', ''));
+    const theName = document.getElementById(name.replace(/App/g, ''));
     theName.innerHTML = `${theName.innerHTML}<br> Touche actuelle : ${parameters[parameters.translator[name]]}`
 }
 
@@ -68,7 +76,7 @@ document.querySelectorAll('.configStream').forEach(name => {
                     media.stopVideo();
                     parameters.isVideoFlux = false;
                 } else {
-                    media.allowVideo();
+                    media.allowVideo()
                     parameters.isVideoFlux = true;
                 }
                 break;
@@ -270,10 +278,4 @@ for (let e of allAwaited) {
     }
 }
 
-ecran.onclick = () => {
-    media.createMedia(true);
-}
-
-cam.onclick = () => {
-    media.createMedia(false);
-}
+media.createMedia();

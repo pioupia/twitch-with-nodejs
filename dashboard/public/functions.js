@@ -1,26 +1,19 @@
-const options = {
-    maxSizeMB: 1,
-    useWebWorker: true
-}
-
 const getFrame = (video) => {
     const canvas = document.createElement('canvas');
     canvas.width = video.videoWidth;
     canvas.height = video.videoHeight;
     canvas.getContext('2d').drawImage(video, 0, 0);
-
-    canvas.toBlob(async function (blob) {
-        const compress = await imageCompression(blob, options);
-        return compress;
-    }, "image/png", 0.01);
-
-    return canvas.toDataURL();
+    const data = canvas.toDataURL('image/png');
+    return data;
 }
 
 const getAudio = (video) => {
     var ctx = new AudioContext();
+      // create an source node from the <video>
       var source = ctx.createMediaElementSource(video);
+      // now a MediaStream destination node
       var stream_dest = ctx.createMediaStreamDestination();
+      // connect the source to the MediaStream
       source.connect(stream_dest);
 
       var tampon = new ArrayBuffer(stream_dest.stream);

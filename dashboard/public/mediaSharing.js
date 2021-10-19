@@ -1,22 +1,27 @@
-const elStream = document.getElementsByClassName("stream")[0];
-
 class mediaSharing {
 	constructor(options, encoder, sampler){
 		this.config = options;
 		this.media = null;
 		this.video = null;
 
+		this.encoder = new OpusEncoder(this.config.codec.sampleRate, this.config.codec.channels, this.config.codec.app, this.config.codec.frameDuration);
+		this.sampler = new Resampler(44100, this.config.codec.sampleRate, 1, this.config.codec.bufferSize);
+		this.audioContext = new AudioContext();
+
 		this.audio = {
 			audioInput: null,
 			gainNode: null,
-			recorder: null
+			recorder: null,
+
 		}
+
+		this.can = true;
+
 		this.sendFPS = null;
 	}
 
-	async createMedia(what){
-		what = what ? 'getDisplayMedia' : 'getUserMedia';
-		this.media = await navigator.mediaDevices[what]({
+	async createMedia(){
+		this.media = await navigator.mediaDevices.getUserMedia({
             audio: this.config.audio,
             video: this.config.video ? {
                 width: this.config.width,
@@ -27,45 +32,9 @@ class mediaSharing {
         }).catch(e => {
         	console.log(e.name + ": " + e.message);
         	this.can = false;
-        });
+        })
 
-		let chunks = [];
-
-		const video = document.querySelector('video');
-		video.srcObject = this.media;
-		video.onloadedmetadata = () => {
-			video.play()
-		}
-
-		let mediaRecorder = new MediaRecorder(this.media, {"mimeType": "video/webm;"});
-		mediaRecorder.ondataavailable = function(ev) {
-			chunks.push(ev.data);
-		}
-
-		var interval = setInterval(() => {
-			mediaRecorder.stop();
-			if(this.media.active !== true) {
-				this.media = null;
-				elStream.classList.add("disable");
-				return clearInterval(interval);
-			}
-			mediaRecorder.start();
-		}, 2000);
-
-		mediaRecorder.onstop = () => {
-			let blob = new Blob(chunks, {'type': 'video/webm;'});
-			chunks = [];
-			const data = new FormData();
-			data.append('file', blob);
-			fetch("/postStream", {
-				"method": "post",
-				"body": data
-			});
-		}
-
-		mediaRecorder.start();
-		elStream.classList.remove("disable");
-        /*if(!this.can) return;
+        if(!this.can) return;
 
     	this.video = document.querySelector('video');
 
@@ -79,7 +48,7 @@ class mediaSharing {
     	}
         if(this.config.isRetour || this.config.isAudioRetour){
         	this.playVideo();
-        }*/
+        }
 	}
 
 	launchSendingAudio(){
@@ -93,14 +62,16 @@ class mediaSharing {
 
             this.setGain(this.config.volume);
 
+	        //l 36313
+
 	        const _this = this;
 	        this.audio.recorder.onaudioprocess = function(e) {
 	        	if(!_this.audio.recorder.onaudioprocess) return;
-				const resampled = sampler.resampler(e.inputBuffer.getChannelData(0));
-				const packets = encoder.encode_float(resampled);
-				for (let i = 0; i < packets.length; i++) {
+	            var resampled = sampler.resampler(e.inputBuffer.getChannelData(0));
+	            var packets = encoder.encode_float(resampled);
+	            for (var i = 0; i < packets.length; i++) {
 	            	if (wss.ws.readyState !== wss.ws.OPEN) return;
-	                wss.ws.send(packets[i]);
+	                wss.ws.send(packets[i])
 	            }
 	        };
 

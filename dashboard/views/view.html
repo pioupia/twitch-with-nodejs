@@ -1,58 +1,35 @@
 <!DOCTYPE html>
 <html>
-	<head>
-		<title>Live</title>
-	</head>
-	<link rel="stylesheet" href="css/view.css">
-	<body style="height: 100%; background-color: transparent;">
-		<video id="videoPlaying" play></video>
-		<script>
-			const mediaSource = new MediaSource();
-			videoPlaying.src = URL.createObjectURL(mediaSource);
-			let streamerSegment = 0;
-			const queue = [];
+<head>
+	<title>Live</title>
+	<script defer src="https://unpkg.com/peerjs@1.2.0/dist/peerjs.min.js"></script>
+</head>
+<body style="height: 100%; background-color: rgb(0, 255, 0);">
+	<img src="">
+	<audio id="out" controls style="opacity: 0;"></audio>
 
-			mediaSource.addEventListener('sourceopen', sourceOpen);
-			var sourceBuffer;
-			const mime = "video/webm; codecs=\"vp8, vorbis\"";
 
-			function fetchSegment(){
-				return fetch(`/playVideo${streamerSegment > 0 ? '?count='+streamerSegment : ''}`).then(res => res.arrayBuffer());
-			}
+	<script src="websocket.js"></script>
+	<script src="plugin/opus.js"></script>
+	<script src="plugin/xaudio.js"></script>
+	<script src="plugin/libopus.js"></script>
+	<script src="plugin/ws-audio-api.js"></script>
 
-			setInterval(async () => {
-				streamerSegment++;
-				if(sourceBuffer.updating) return;
-				let data = await fetchSegment();
+	<script type="text/javascript">
+		const img = document.querySelector('img');
+		const wss = new webSocket('ws://localhost:2200');
 
-				if (queue.length > 0) return queue.push(data);
+		wss.open();
 
-				sourceBuffer.appendBuffer(data);
-				videoPlaying.play();
-			}, 2000)
+		var video = document.querySelector('video');
 
-			async function sourceOpen(){
-				let informations = await Promise.all([fetch("/getStreamer").then(res => res.json()), fetchSegment()]);
-				streamerSegment = informations[0].count;
-				let data = informations[1];
-				queue.push(data);
-				sourceBuffer = mediaSource.addSourceBuffer(mime);
-				sourceBuffer.mode = 'sequence';
-				sourceBuffer.addEventListener('updateend', onUpdateEnd);
-				sourceBuffer.onabort = (...e) => {
-					console.log(...e);
-				}
-				sourceBuffer.onerror = (...e) => {
-					console.log(...e);
-				}
-				videoPlaying.play();
-				sourceBuffer.appendBuffer(queue.shift());
-			}
+		var player = new WSAudioAPI.Player();
+		player.start();
 
-			function onUpdateEnd(){
-				if(queue.length < 1 || sourceBuffer.updating) return;
-					sourceBuffer.appendBuffer(queue.shift())
-			}
-		</script>
-	</body>
+		wss.on('video', (data) => {
+			img.src = data;
+		});
+	</script>
+
+</body>
 </html>
