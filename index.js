@@ -82,5 +82,3 @@ let Website = class Website {
         return tmp;
     }
 }
-
-new Website().start();
