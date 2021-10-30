@@ -225,3 +225,14 @@ html, body{
     height: 35vh;
   }
 }
+
+.tchat {
+  position: fixed;
+  top: 20px;
+  right: 20px;
+  width: 10vh;
+  height: 60vh;
+  background: #bdbcbc;
+  border-radius: 15px;
+  z-index: 10000000000000;
+}

@@ -4,13 +4,17 @@ const express = require("express"),
     app = express(),
     fileUpload = require('express-fileupload'),
     { Duplex } = require('stream'),
-    fs = require("fs");
+    fs = require("fs"),
+    http = require("http"),
+    Websocket = require("websocket").server;
+
 let i = 0;
 
-let Website = class Website {
+class Website {
     constructor() {
         this.config = config;
         this.chunks = new Array();
+        this.chatConnected = new Array();
     }
 
     async start() {
@@ -71,6 +75,44 @@ let Website = class Website {
         setInterval(() => {
             this.chunks = this.chunks.filter(r => r.date+60000 >= Date.now());
         }, 30*1000)
+
+        this.launchTchat();
+    }
+
+    launchTchat(){
+        const server = http.createServer(function(request, response) {
+            console.log((new Date()) + ' Received request for ' + request.url);
+            response.writeHead(404);
+            response.end();
+        });
+        server.listen(3000, function() {
+            console.log((new Date()) + ' Server is listening on port 3000');
+        });
+
+        const wsServer = new Websocket({
+            httpServer: server,
+            autoAcceptConnections: false
+        });
+
+        const _this = this;
+        wsServer.on('request', function(request) {
+            const connection = request.accept('echo-protocol', request.origin);
+            _this.chatConnected.push(connection);
+            connection.on('message', function(message) {
+                if (message.type === 'utf8') {
+                    const data = JSON.parse(message.utf8Data);
+                    if(data.event === "message"){
+                        _this.chatConnected.forEach(e => {
+                            e.sendUTF(message.utf8Data);
+                        });
+                    }
+                }
+            });
+            connection.on('close', function(reasonCode, description) {
+                console.log((new Date()) + ' Peer ' + connection.remoteAddress + ' disconnected.');
+                _this.chatConnected.splice(_this.chatConnected.findIndex(r => r === connection), 1);
+            });
+        });
     }
     /*
         Convert a buffer to a readable stream to send it to front.
@@ -82,3 +124,5 @@ let Website = class Website {
         return tmp;
     }
 }
+
+new Website().start()

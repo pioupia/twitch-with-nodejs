@@ -1,12 +1,13 @@
 class webSocket {
-    constructor(parameters) {
+    constructor(parameters, protocols = []) {
         this.url = parameters;
+        this.protocols = protocols
         this.ws = undefined;
         this.callbacks = {};
     }
 
     open() {
-        this.ws = new WebSocket(this.url);
+        this.ws = new WebSocket(this.url, this.protocols);
 
         this.ws.onopen = () => {
             console.log('WebSocket open');
@@ -70,13 +71,4 @@ class webSocket {
             events(data);
         }
     }
-
-    sendTo(target, event, data) {
-        this.ws.send(JSON.stringify({
-            event,
-            data,
-            target
-        }));
-    }
-
 }
