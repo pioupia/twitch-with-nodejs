@@ -1,0 +1,27 @@
+{
+  "name": "twitch-with-nodejs",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "node index.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/pioupia/twitch-with-nodejs.git"
+  },
+  "author": "",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/pioupia/twitch-with-nodejs/issues"
+  },
+  "homepage": "https://github.com/pioupia/twitch-with-nodejs#readme",
+  "dependencies": {
+    "body-parser": "^1.19.0",
+    "express": "^4.17.1",
+    "express-fileupload": "^1.2.1",
+    "path": "^0.12.7",
+    "websocket": "^1.0.34"
+  }
+}
