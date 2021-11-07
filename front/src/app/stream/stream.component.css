@@ -1,3 +1,82 @@
+.chat-bar {
+  display: block;
+  height: 92vh;
+  width: 25%;
+  background: var(--sidebar);
+}
 
+.header {
+  padding: 5px 15px;
+  text-align: center;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.3);
+}
+
+.chat-content {
+  height: 64vh;
+  padding: 5px;
+}
+
+.welcomeMsg {
+  opacity: 0.5;
+  text-align: center;
+  display: block;
+}
+
+.msg {
+  display: inline-block;
+  transition: all 0.2s ease-in-out;
+  width: 100%;
+  border-radius: 5px;
+}
+.msg:hover {
+  background-color: rgba(255, 255, 255, 0.2);
+}
+
+.msg-date {
+  margin-right: 2%;
+  opacity: 0.6;
+  margin-left: 3%;
+}
+
+.msg-author {
+  color: var(--red-color);
+  cursor: pointer;
+  transition: all 0.2s ease-in-out;
+  border-radius: 5px;
+}
+
+.messageContent {
+  width: 90%;
+  display: block;
+  margin: 10px auto;
+  background: var(--searchbar);
+  outline: none;
+  border: none;
+  resize: none;
+  color: var(--text-color);
+  overflow-x: hidden;
+  padding-bottom: 1rem;
+  padding-left: 1rem;
+  padding-top: 1rem;
+  border-radius: 8px;
+  font-family: "Quicksand", sans-serif;
+}
+
+.sendMsg {
+  border: none;
+  border-radius: 6px;
+  padding: 0.6rem;
+  background: var(--red-color);
+  cursor: pointer;
+  color: var(--text-color);
+  font-weight: 600;
+  float: right;
+  margin-right: 5px;
+}
+
+.chatActions {
+  width: 90%;
+  margin: 0 auto;
+}
 
 /*# sourceMappingURL=stream.component.css.map */

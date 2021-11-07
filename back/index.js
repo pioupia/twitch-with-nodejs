@@ -27,24 +27,7 @@ class Website {
                     limits: { fileSize: 1 * 1024 * 1024 },
                 })
             )
-            .set('views', path.join(__dirname, `${path.sep}dashboard${path.sep}views`))
             .set("port", this.config.website.port);
-
-        const renderTemplate = (res, template) => {
-            res.status(200).sendFile(path.resolve(__dirname + `${path.sep}dashboard${path.sep}views${path.sep}${template}`));
-        };
-
-        app.get("/", async(req, res) => {
-            return renderTemplate(res, "index.html")
-        });
-
-        app.get("/panel", async(req, res) => {
-            return renderTemplate(res, "panel.html")
-        });
-
-        app.get("/view", async(req, res) => {
-            renderTemplate(res, "view.html");
-        });
 
         app.post("/postStream", async (req, res) => {
             const fileProperty = req?.files?.file;
@@ -85,7 +68,7 @@ class Website {
             response.writeHead(404);
             response.end();
         });
-        server.listen(3000, function() {
+        server.listen(7070, function() {
             console.log((new Date()) + ' Server is listening on port 3000');
         });
 

@@ -1,1 +1,21 @@
-<p>stream works!</p>
+<div class="chat-bar">
+  <div class="header">
+    <h1>Stream chat</h1>
+  </div>
+  <div class="chat-content">
+    <div *ngFor="let message of messages">
+      <span *ngIf="message.isWelcome" class="welcomeMsg">{{ message.content }}</span>
+      <div *ngIf="!message.isWelcome" class="msg">
+        <span class="msg-date">{{ message.date }}</span>
+        <span class="msg-author">{{ message.author }}</span>
+        <span class="msg-content"> : {{ message.content }}</span>
+      </div>
+    </div>
+  </div>
+  <div class="chat-send">
+    <textarea maxlength="500" placeholder="Send a message" class="messageContent" rows="1"></textarea>
+    <div class="chatActions">
+      <button class="sendMsg">Send</button>
+    </div>
+  </div>
+</div>
