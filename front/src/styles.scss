@@ -4,12 +4,12 @@
   --text-color: #fff;
   --red-color: #d35b5b;
   --yellow-color: #ffe74c;
-  --blue-color: #7ed6ea;
-  --blue-color: #5499c4;
-  --blue-color: #4e8bb3;
-  --blue-color: #4689b5;
-  --background: #1F292D;
-  --navbar: #2C3437;
+  --blue-color-1: #7ed6ea;
+  --blue-color-2: #5499c4;
+  --blue-color-3: #4e8bb3;
+  --blue-color-4: #4689b5;
+  --background: #1f292d;
+  --navbar: #2c3437;
   --sidebar: #34393A;
   --searchbar: #444849;
 }
@@ -19,4 +19,40 @@ html, body{
   color: var(--text-color);
   font-family: 'Quicksand', sans-serif;
   scroll-behavior: smooth;
+}
+
+*{
+  margin: 0;
+  padding: 0;
+}
+
+a{
+  color: var(--text-color);
+  text-decoration: none;
+}
+
+.avancement{
+  position: fixed;
+  top: 0;
+  left: 0;
+  height: 3px;
+  width: 0;
+  background: var(--blue-color-1);
+  background: linear-gradient(90deg, var(--blue-color-2) 0%, var(--blue-color-1) 100%);
+  animation: 1s load cubic-bezier(.69,.26,.07,.56) 1;
+}
+
+@keyframes load {
+  0%{
+    width: 0;
+  }
+  25%{
+    width: 45%;
+  }
+  65%{
+    width: 65%;
+  }
+  100%{
+    width: 100%;
+  }
 }

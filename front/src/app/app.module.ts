@@ -6,13 +6,15 @@ import { AppComponent } from './app.component';
 import { NavbarComponent } from './navbar/navbar.component';
 import { SideBarComponent } from './side-bar/side-bar.component';
 import { MainComponent } from './main/main.component';
+import { StreamComponent } from './stream/stream.component';
 
 @NgModule({
   declarations: [
     AppComponent,
     NavbarComponent,
     SideBarComponent,
-    MainComponent
+    MainComponent,
+    StreamComponent
   ],
   imports: [
     BrowserModule,
