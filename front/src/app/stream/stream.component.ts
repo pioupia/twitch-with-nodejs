@@ -42,8 +42,8 @@ export class StreamComponent implements OnInit {
         author: "Pioupia",
         date: `${d.getHours()}:${d.getMinutes()}`
       });
-      if(this.messages.length > 100) this.messages.splice(100, 1);
-      chatContent.scroll(0, chatContent.scrollHeight)
+      if(this.messages.length > 100) this.messages.splice(99, 1);
+      chatContent.scroll(0, chatContent.scrollHeight);
     });
 
     send.onclick = this.sendMessage(messageContent, ws);
@@ -66,5 +66,4 @@ export class StreamComponent implements OnInit {
     messageContent.value = "";
     return false;
   }
-
 }
