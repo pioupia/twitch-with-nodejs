@@ -5,3 +5,13 @@ Twitch-with-nodejs is an open source back-end and project can send a stream of a
 Like Twitch but not so good.
 
 Using expressjs and Angular.
+
+The project is not finished.
+
+Things to do :
+- [ ] Launch and view a stream with the new Angular structur
+- [ ] Add clips
+- [ ] Dark mode / light mode
+- [ ] The app needs an icon
+- [x] Create a chat system
+- [ ] Account managment system
