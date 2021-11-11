@@ -1,6 +1,7 @@
 .chat-bar{
-  display: block;
-  height: 92vh;
+  display: flex;
+  flex-direction: column;
+  height: 92%;
   width: 25%;
   background: var(--sidebar);
 }
@@ -11,16 +12,31 @@
   border-bottom: 1px solid rgba(255,255,255,.3);
 }
 
+.chat-component{
+  min-height: 0;
+  display: flex !important;
+  flex-flow: column nowrap !important;
+  position: relative !important;
+  -moz-box-flex: 1 !important;
+  flex-grow: 1 !important;
+  height: 100% !important;
+}
+
 .chat-content{
-  height: 64vh;
-  padding: 5px;
-  overflow-y: auto;
+  display: flex !important;
+  flex-direction: column !important;
+  -moz-box-flex: 1 !important;
+  flex-grow: 1 !important;
+  overflow-x: hidden !important;
+  overflow-y: auto !important;
+  scroll-behavior: smooth;
 }
 
 .welcomeMsg {
   opacity: .5;
   text-align: center;
   display: block;
+  margin: 5px 0;
 }
 
 .msg{
@@ -28,6 +44,7 @@
   transition: all .2s ease-in-out;
   width: 100%;
   border-radius: 5px;
+  padding: 5px 0;
   &:hover{
     background-color: rgba(255,255,255,.2);
   }
@@ -98,7 +115,7 @@
   align-items: center;
   width: max-content;
   height: max-content;
-  transform: translate(-50%, -60px);
+  transform: translate(57%, -40px);
   background: var(--popup);
   animation: color_anim .5s cubic-bezier(.79,-0.08,.31,.55) 1;
   border-radius: 8px;
@@ -124,6 +141,7 @@
   border-radius: 50%;
   transition: all .2s ease-in-out;
   border: 1.5px solid transparent;
+  cursor: pointer;
   &:hover{
     border: 1.5px solid #fff;
   }
@@ -163,11 +181,11 @@
 
 @keyframes color_anim {
   0%{
-    transform: translate(-50%, -30px);
+    transform: translate(57%, -10px);
     opacity: 0;
   }
   100%{
-    transform: translateY(-50%, -60px);
+    transform: translateY(57%, -40px);
     opacity: 1;
   }
 }

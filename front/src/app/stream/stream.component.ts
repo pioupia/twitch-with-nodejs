@@ -46,7 +46,7 @@ export class StreamComponent implements OnInit {
       this.messages.push({
         content: message.msg,
         author: "Pioupia",
-        date: `${d.getHours()}:${d.getMinutes()}`,
+        date: this.msgDate(d),
         color: message.color
       });
       setTimeout(() => {
@@ -60,10 +60,9 @@ export class StreamComponent implements OnInit {
     messageContent.onkeydown = (ev: any)  => {
       if(ev.keyCode === 13){
         if(!ev.shiftKey) return this.sendMessage(messageContent, ws);
-        //messageContent.value += "\n";
+        messageContent.value += "\n";
       }
-      //const attr = parseInt(messageContent.getAttribute("rows"));
-      //if(messageContent.selectionEnd < 5 && messageContent.selectionEnd !== attr) messageContent.setAttribute("rows", messageContent.selectionEnd);
+      if(messageContent.rows < 5) messageContent.setAttribute("rows", messageContent.rows+1);
       return true;
     }
     ws.open();
@@ -75,6 +74,14 @@ export class StreamComponent implements OnInit {
     ws.send("message", JSON.stringify({msg: content, color: this.color }));
     messageContent.value = "";
     return false;
+  }
+
+  private msgDate(date: Date): string {
+    return `${this.parseDate(date.getHours())}:${this.parseDate(date.getMinutes())}`;
+  }
+
+  private parseDate(value: number, max: number = 10): string {
+    return value < max ? `0${value}` : value.toString();
   }
 
   public changeColor(el?: any): void {
