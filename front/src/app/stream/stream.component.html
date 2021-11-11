@@ -7,7 +7,7 @@
       <span *ngIf="message.isWelcome" class="welcomeMsg">{{ message.content }}</span>
       <div *ngIf="!message.isWelcome" class="msg">
         <span class="msg-date">{{ message.date }}</span>
-        <span class="msg-author">{{ message.author }}</span>
+        <span class="msg-author {{ message.color }}">{{ message.author }}</span>
         <span class="msg-content"> : {{ message.content }}</span>
       </div>
     </div>

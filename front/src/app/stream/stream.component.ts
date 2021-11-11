@@ -5,7 +5,8 @@ interface message{
   content: string,
   author?: string,
   date?: string,
-  isWelcome?: boolean
+  isWelcome?: boolean,
+  color?: string
 }
 
 @Component({
@@ -17,6 +18,7 @@ interface message{
 export class StreamComponent implements OnInit {
 
   messages: Array<message> = [];
+  color: string = 'yellow';
   constructor() {
   }
 
@@ -35,12 +37,14 @@ export class StreamComponent implements OnInit {
       chatContent.scroll(0, chatContent.scrollHeight);
     });
 
-    ws.on("message", (message: string) => {
+    ws.on("message", (message: any) => {
       const d = new Date();
+      message = JSON.parse(message);
       this.messages.push({
-        content: message,
+        content: message.msg,
         author: "Pioupia",
-        date: `${d.getHours()}:${d.getMinutes()}`
+        date: `${d.getHours()}:${d.getMinutes()}`,
+        color: message.color
       });
       if(this.messages.length > 100) this.messages.splice(99, 1);
       chatContent.scroll(0, chatContent.scrollHeight);
@@ -50,10 +54,10 @@ export class StreamComponent implements OnInit {
     messageContent.onkeydown = (ev: any)  => {
       if(ev.keyCode === 13){
         if(!ev.shiftKey) return this.sendMessage(messageContent, ws);
-        messageContent.value += "\n";
+        //messageContent.value += "\n";
       }
-      const attr = parseInt(messageContent.getAttribute("rows"));
-      if(messageContent.selectionEnd < 5 && messageContent.selectionEnd !== attr) messageContent.setAttribute("rows", messageContent.selectionEnd);
+      //const attr = parseInt(messageContent.getAttribute("rows"));
+      //if(messageContent.selectionEnd < 5 && messageContent.selectionEnd !== attr) messageContent.setAttribute("rows", messageContent.selectionEnd);
       return true;
     }
     ws.open();
@@ -62,7 +66,7 @@ export class StreamComponent implements OnInit {
   sendMessage(messageContent: any, ws: any){
     const content = messageContent.value.trim();
     if(!content || content == '' || content.length > 500) return false;
-    ws.send("message", content);
+    ws.send("message", JSON.stringify({msg: content, color: this.color }));
     messageContent.value = "";
     return false;
   }
