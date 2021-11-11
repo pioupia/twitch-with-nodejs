@@ -36,7 +36,6 @@ export class StreamComponent implements OnInit {
         isWelcome: true,
         content: `Bienvenue sur le chat de ${document.location.pathname.split('/').reverse()[0]} !`
       });
-
       chatContent.scroll(0, chatContent.scrollHeight);
     });
 
@@ -50,7 +49,10 @@ export class StreamComponent implements OnInit {
         date: `${d.getHours()}:${d.getMinutes()}`,
         color: message.color
       });
-      chatContent.scroll(0, chatContent.scrollHeight + 100);
+      setTimeout(() => {
+        // Wait time for variable scrollHeight to update.
+        chatContent.scroll(0, chatContent.scrollHeight);
+      }, 5)
     });
 
     params.onclick = () => this.changeColor();

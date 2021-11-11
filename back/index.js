@@ -4,7 +4,6 @@ const express = require("express"),
     app = express(),
     fileUpload = require('express-fileupload'),
     { Duplex } = require('stream'),
-    fs = require("fs"),
     http = require("http"),
     Websocket = require("websocket").server;
 
@@ -13,8 +12,8 @@ let i = 0;
 class Website {
     constructor() {
         this.config = config;
-        this.chunks = new Array();
-        this.chatConnected = new Array();
+        this.chunks = [];
+        this.chatConnected = [];
     }
 
     async start() {
@@ -24,7 +23,7 @@ class Website {
             .use(
                 fileUpload({
                     useTempFiles: false,
-                    limits: { fileSize: 1 * 1024 * 1024 },
+                    limits: { fileSize: 1024 * 1024 },
                 })
             )
             .set("port", this.config.website.port);
@@ -85,13 +84,15 @@ class Website {
                 if (message.type === 'utf8') {
                     const data = JSON.parse(message.utf8Data);
                     if(data.event === "message"){
+                        const msg = (JSON.parse(data.data || '{}'))?.msg;
+                        if(!msg || msg.length > 500) return;
                         _this.chatConnected.forEach(e => {
                             e.sendUTF(message.utf8Data);
                         });
                     }
                 }
             });
-            connection.on('close', function(reasonCode, description) {
+            connection.on('close', () => {
                 _this.chatConnected.splice(_this.chatConnected.findIndex(r => r === connection), 1);
             });
         });
