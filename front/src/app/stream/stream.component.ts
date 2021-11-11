@@ -19,6 +19,8 @@ export class StreamComponent implements OnInit {
 
   messages: Array<message> = [];
   color: string = 'yellow';
+  changingColor: boolean = !1;
+
   constructor() {
   }
 
@@ -27,6 +29,7 @@ export class StreamComponent implements OnInit {
     const chatContent: any = document.querySelector(".chat-content");
     const send: any = document.querySelector(".sendMsg");
     const messageContent: any = document.querySelector(".messageContent");
+    const params: any = document.querySelector(".params");
 
     ws.on('ready', () => {
       this.messages.push({
@@ -40,17 +43,18 @@ export class StreamComponent implements OnInit {
     ws.on("message", (message: any) => {
       const d = new Date();
       message = JSON.parse(message);
+      if(this.messages.length+1 > 100) this.messages.splice(1, 1);
       this.messages.push({
         content: message.msg,
         author: "Pioupia",
         date: `${d.getHours()}:${d.getMinutes()}`,
         color: message.color
       });
-      if(this.messages.length > 100) this.messages.splice(99, 1);
-      chatContent.scroll(0, chatContent.scrollHeight);
+      chatContent.scroll(0, chatContent.scrollHeight + 100);
     });
 
-    send.onclick = this.sendMessage(messageContent, ws);
+    params.onclick = () => this.changeColor();
+    send.onclick = () => this.sendMessage(messageContent, ws);
     messageContent.onkeydown = (ev: any)  => {
       if(ev.keyCode === 13){
         if(!ev.shiftKey) return this.sendMessage(messageContent, ws);
@@ -63,11 +67,32 @@ export class StreamComponent implements OnInit {
     ws.open();
   }
 
-  sendMessage(messageContent: any, ws: any){
+  private sendMessage(messageContent: any, ws: any): boolean {
     const content = messageContent.value.trim();
     if(!content || content == '' || content.length > 500) return false;
     ws.send("message", JSON.stringify({msg: content, color: this.color }));
     messageContent.value = "";
     return false;
+  }
+
+  public changeColor(el?: any): void {
+    if(el){
+      el = el.target?.classList?.[1]?.replace('-bg','');
+      switch(el){
+        case 'r':
+          this.color = 'red';
+          break;
+        case 'v':
+          this.color = 'green';
+          break;
+        case 'b':
+          this.color = 'blue';
+          break;
+        case 'y':
+          this.color = 'yellow';
+          break;
+      }
+    }else this.changingColor = !this.changingColor;
+    return;
   }
 }

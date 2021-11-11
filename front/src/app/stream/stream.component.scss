@@ -14,6 +14,7 @@
 .chat-content{
   height: 64vh;
   padding: 5px;
+  overflow-y: auto;
 }
 
 .welcomeMsg {
@@ -63,6 +64,19 @@
 
 }
 
+.align-right{
+  display: flex;
+  justify-content: end;
+  align-items: center;
+}
+
+.params{
+  cursor: pointer;
+  margin-right: 15px;
+  width: 20px;
+  height: 20px;
+}
+
 .sendMsg{
   border: none;
   border-radius: 6px;
@@ -71,13 +85,68 @@
   cursor: pointer;
   color: var(--text-color);
   font-weight: 600;
-  float: right;
   margin-right: 5px;
 }
 
 .chatActions{
   width: 90%;
   margin: 0 auto;
+}
+
+.colorChanger {
+  display: flex;
+  align-items: center;
+  width: max-content;
+  height: 40px;
+  transform: translate(-50%, -60px);
+  background: var(--popup);
+  animation: color_anim .5s cubic-bezier(.79,-0.08,.31,.55) 1;
+  border-radius: 8px;
+  &:after{
+    content: "";
+    display: block;
+    box-sizing: border-box;
+    position: absolute;
+    border-left: 5px solid transparent;
+    border-right: 5px solid transparent;
+    border-top: 10px solid var(--popup);
+    top: 40px;
+    left: 50%;
+    transform: translateX(-50%);
+  }
+}
+
+.changeColor{
+  width: 20px;
+  height: 20px;
+  margin-right: 5px;
+  background: #fff;
+  border-radius: 50%;
+  transition: all .2s ease-in-out;
+  border: 1.5px solid transparent;
+  &:hover{
+    border: 1.5px solid #fff;
+  }
+}
+
+.r-bg{
+  background: var(--red-color) !important;
+}
+
+.v-bg{
+  background: var(--green-color) !important;
+}
+
+.y-bg{
+  background: var(--yellow-color) !important;
+}
+
+.b-bg{
+  background: var(--blue-color-2) !important;
+}
+
+.green{
+  color: var(--green-color) !important;
 }
 
 .yellow{
@@ -88,6 +157,52 @@
   color: var(--red-color) !important;
 }
 
-.bleu{
+.blue{
   color: var(--blue-color-2) !important;
+}
+
+@keyframes color_anim {
+  0%{
+    transform: translate(-50%, -30px);
+    opacity: 0;
+  }
+  100%{
+    transform: translateY(-50%, -60px);
+    opacity: 1;
+  }
+}
+
+
+/* Icons */
+
+.gg-options {
+  box-sizing: border-box;
+  position: relative;
+  display: block;
+  transform: scale(var(--ggs,1));
+  width: 10px;
+  height: 2px;
+  box-shadow:
+    -3px 4px 0 0,
+    3px -4px 0 0;
+  left: 4px;
+  top: 8.5px;
+  &::after, &::before{
+    content: "";
+    display: block;
+    box-sizing: border-box;
+    position: absolute;
+    width: 8px;
+    height: 8px;
+    border: 2px solid;
+    border-radius: 100%;
+  }
+  &::before{
+    top: -7px;
+    left: -4px;
+  }
+  &::after{
+    bottom: -7px;
+    right: -4px;
+  }
 }

@@ -15,7 +15,19 @@
   <div class="chat-send">
     <textarea maxlength="500" placeholder="Send a message" class="messageContent" rows="1"></textarea>
     <div class="chatActions">
-      <button class="sendMsg">Send</button>
+      <div class="align-right">
+        <div class="params">
+          <div class="gg-options">
+          </div>
+          <div *ngIf="changingColor" class="colorChanger">
+            <div class="changeColor r-bg" style="margin-left: 5px" (click)="changeColor($event)"></div>
+            <div class="changeColor v-bg" (click)="changeColor($event)"></div>
+            <div class="changeColor b-bg" (click)="changeColor($event)"></div>
+            <div class="changeColor y-bg" (click)="changeColor($event)"></div>
+          </div>
+        </div>
+        <button class="sendMsg">Send</button>
+      </div>
     </div>
   </div>
 </div>
