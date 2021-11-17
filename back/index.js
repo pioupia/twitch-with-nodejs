@@ -32,7 +32,7 @@ class Website {
             const fileProperty = req?.files?.file;
             if(!fileProperty?.data || fileProperty.mimetype !== 'video/webm') return res.json(false);
             this.chunks.push({ data: fileProperty?.data, id: i++, date: Date.now() });
-            return res.json(true);
+            return res.header('Access-content-allow-origin', 'localhost:3000').end();
         });
 
         app.get("/getStreamer", (req, res) => {

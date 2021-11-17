@@ -10,7 +10,7 @@ const routes: Routes = [{
   path: 'channels/:test', component: StreamComponent
 },
   {
-    path: 'stream', component: PanelComponent
+    path: 'panel', component: PanelComponent
   }];
 
 @NgModule({

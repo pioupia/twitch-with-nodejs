@@ -19,9 +19,10 @@ export class mediaSharing {
     this.elStream = document.getElementsByClassName("stream")[0];
 	}
 
-	async createMedia(what: string): Promise<any> {
+	async createMedia(what: boolean | string): Promise<any> {
 		what = what ? 'getDisplayMedia' : 'getUserMedia';
-		// @ts-ignore
+
+    // @ts-ignore
     this.media = await navigator.mediaDevices[what]({
 			audio: this.config.audio,
 			video: this.config.video ? {
@@ -64,7 +65,7 @@ export class mediaSharing {
 			chunks = [];
 			const data = new FormData();
 			data.append('file', blob);
-			fetch("/postStream", {
+			fetch("http://localhost:8080/postStream", {
 				"method": "post",
 				"body": data
 			});
