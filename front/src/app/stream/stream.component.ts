@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { webSocket } from './websocket.service';
+import { webSocket } from '../services/websocket.service';
 
 interface message{
   content: string,
