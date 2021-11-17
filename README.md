@@ -18,6 +18,7 @@ Things to do :
 - [ ] Video manipulation
 
 Current pages available : 
-http://localhost:3000/
-http://localhost:3000/channel/[^ /]+
-http://localhost:3000/panel
+
+- http://localhost:3000/
+- http://localhost:3000/channel/name
+- http://localhost:3000/panel
