@@ -33,7 +33,7 @@ export class webSocket {
       }
     }
 
-    this.ws.onerror = (e: any) => {
+    this.ws.onerror = () => {
       if (this.ws.readyState == this.ws.OPEN) return;
       this.reconnected();
     }
