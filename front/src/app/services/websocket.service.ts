@@ -7,12 +7,14 @@ export class webSocket {
   protocols: any = [];
   ws: any;
   callbacks: any = {};
+  reconnecting: boolean;
 
   constructor(parameters: string, protocols: any = []) {
     this.url = parameters;
     this.protocols = protocols;
     this.ws = undefined;
     this.callbacks = {};
+    this.reconnecting = !1;
   }
 
   open(): void {
@@ -34,11 +36,14 @@ export class webSocket {
     }
 
     this.ws.onerror = () => {
-      if (this.ws.readyState == this.ws.OPEN) return;
-      this.reconnected();
+      if (this.ws.readyState == this.ws.OPEN || this.reconnecting) return;
+      this.reconnecting = !0;
+      return this.reconnected();
     }
 
     this.ws.onclose = () => {
+      if (this.ws.readyState == this.ws.OPEN || this.reconnecting) return;
+      this.reconnecting = !0;
       this.reconnected();
     }
   }
@@ -47,14 +52,6 @@ export class webSocket {
     setTimeout(() => {
       this.open();
     }, 1000)
-
-    setTimeout(() => {
-      if (this.ws.readyState == this.ws.OPEN) return;
-      let intervalConnectWS: any = setInterval(() => {
-        if (this.ws.readyState == this.ws.OPEN) return clearInterval(intervalConnectWS);
-        this.open()
-      }, 1000)
-    }, 4 * 1000)
   }
 
   on(event: string, callback: any) {

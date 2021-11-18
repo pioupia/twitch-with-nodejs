@@ -25,14 +25,17 @@ class Website {
                     useTempFiles: false,
                     limits: { fileSize: 1024 * 1024 },
                 })
-            )
+            ).use((req, res, next) => {
+                res.setHeader("Access-Control-Allow-Origin", "*");
+                next();
+            })
             .set("port", this.config.website.port);
 
         app.post("/postStream", async (req, res) => {
             const fileProperty = req?.files?.file;
             if(!fileProperty?.data || fileProperty.mimetype !== 'video/webm') return res.json(false);
             this.chunks.push({ data: fileProperty?.data, id: i++, date: Date.now() });
-            return res.header('Access-content-allow-origin', 'localhost:3000').end();
+            return res.end();
         });
 
         app.get("/getStreamer", (req, res) => {
@@ -67,6 +70,7 @@ class Website {
             response.writeHead(404);
             response.end();
         });
+
         server.listen(7070, function() {
             console.log((new Date()) + ' Server is listening on port 3000');
         });
