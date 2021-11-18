@@ -89,9 +89,7 @@ export class StreamComponent implements OnInit {
 
     this.refreshVideo = setInterval(async () => {
       this.streamSegment++;
-      if(this.sourceBuffer.updating) return;
-      console.log(this.sourceBuffer);
-      console.log("Refresh Segment", Date.now())
+      if(!this.sourceBuffer || this.sourceBuffer.updating) return;
       let data = await _this.fetchSegment();
 
       if (this.queue.length > 0){
@@ -105,14 +103,14 @@ export class StreamComponent implements OnInit {
   }
 
   async sourceOpen(_this: any): Promise<void> {
-    let informations: any = await Promise.all([fetch("localhost:8080/getStreamer").then(res => res.json()),
+    const informations: any = await Promise.all([fetch("http://localhost:8080/getStreamer").then((res: any) => res.json()),
       _this.fetchSegment()]).catch((e:any) => console.error(e));
     _this.streamSegment = informations[0].count;
     let data = informations[1];
     _this.queue.push(data);
     _this.sourceBuffer = _this.mediaSource.addSourceBuffer(_this.mime);
     _this.sourceBuffer.mode = 'sequence';
-    _this.sourceBuffer.addEventListener('updateend', _this.onUpdateEnd);
+    _this.sourceBuffer.addEventListener('updateend', _this.onUpdateEnd(_this));
     _this.sourceBuffer.onabort = (...e: any) => {
       console.log(...e);
     }
@@ -125,8 +123,7 @@ export class StreamComponent implements OnInit {
 
   private fetchSegment(): any {
     return fetch(`http://localhost:8080/playVideo${this.streamSegment > 0 ? '?count='+this.streamSegment : ''}`)
-      .catch((e) => {
-        console.log(e, "error");
+      .catch(() => {
         this.enableStream = !1;
         clearInterval(this.refreshVideo);
         this.sourceBuffer = undefined;
@@ -135,11 +132,10 @@ export class StreamComponent implements OnInit {
       }).then((res: any) => res.arrayBuffer());
   }
 
-  private onUpdateEnd(): void{
-    if(this.queue.length < 1 || this.sourceBuffer.updating) return;
-    this.sourceBuffer.appendBuffer(this.queue.shift());
-    this.sourceBuffer.remove(0, 2);
-    return;
+  private onUpdateEnd(_this: any): void {
+    if(_this.queue.length < 1 || _this.sourceBuffer.updating) return;
+    _this.sourceBuffer.appendBuffer(_this.queue.shift());
+    _this.sourceBuffer.remove(0, 2);
   }
 
   private sendMessage(messageContent: any, ws: any): boolean {

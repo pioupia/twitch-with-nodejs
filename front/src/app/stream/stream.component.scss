@@ -1,7 +1,11 @@
 .streamContent{
   display: block;
-  width: 40vh;
+  width: 50%;
   height: 55vh;
+  float: right;
+  video{
+    width: 90%;
+  }
 }
 
 .chat-bar{
