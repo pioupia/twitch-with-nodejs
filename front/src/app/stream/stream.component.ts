@@ -28,12 +28,14 @@ export class StreamComponent implements OnInit {
   private refreshVideo: any;
   private readonly mime: string;
   private enableStream: boolean = !0;
+  private isScrolling: boolean;
 
   constructor() {
     this.streamSegment = 0;
     this.queue = [];
     this.sourceBuffer = !1;
     this.mime = "video/webm; codecs=\"vp8, vorbis\"";
+    this.isScrolling = !1;
   }
 
   ngOnInit(): void {
@@ -69,6 +71,8 @@ export class StreamComponent implements OnInit {
       }, 5)
     });
 
+    ws.on("start", this.initStream);
+
     params.onclick = () => this.changeColor();
     send.onclick = () => this.sendMessage(messageContent, ws);
     messageContent.onkeydown = (ev: any)  => {
@@ -82,15 +86,19 @@ export class StreamComponent implements OnInit {
     ws.open();
 
     // Connect to the stream
-    const _this: any = this;
+    this.initStream();
+  }
+
+  initStream(): void {
     this.videoPlaying.src = URL.createObjectURL(this.mediaSource);
 
-    this.mediaSource.addEventListener('sourceopen', this.sourceOpen(_this));
+    this.mediaSource.addEventListener('sourceopen', this.sourceOpen(this));
 
     this.refreshVideo = setInterval(async () => {
       this.streamSegment++;
       if(!this.sourceBuffer || this.sourceBuffer.updating) return;
-      let data = await _this.fetchSegment();
+      let data = await this.fetchSegment();
+      if(data.byteLength < 10) return this.endStream();
 
       if (this.queue.length > 0){
         this.queue.push(data);
@@ -98,7 +106,14 @@ export class StreamComponent implements OnInit {
       }
 
       this.sourceBuffer.appendBuffer(data);
-      this.videoPlaying.play();
+      setTimeout(() => {
+        // Clearing memory
+        if(!this.sourceBuffer || this.sourceBuffer.updating) return;
+        const time = this.sourceBuffer.timestampOffset - 2;
+        if(time > 2){
+          this.sourceBuffer.remove(0, time);
+        }
+      }, 1000)
     }, 2000)
   }
 
@@ -107,7 +122,7 @@ export class StreamComponent implements OnInit {
       _this.fetchSegment()]).catch((e:any) => console.error(e));
     _this.streamSegment = informations[0].count;
     let data = informations[1];
-    _this.queue.push(data);
+    if(data.byteLength < 10) return _this.endStream();
     _this.sourceBuffer = _this.mediaSource.addSourceBuffer(_this.mime);
     _this.sourceBuffer.mode = 'sequence';
     _this.sourceBuffer.addEventListener('updateend', _this.onUpdateEnd(_this));
@@ -117,25 +132,33 @@ export class StreamComponent implements OnInit {
     _this.sourceBuffer.onerror = (...e: any) => {
       console.log(...e);
     }
-    _this.videoPlaying.play();
-    _this.sourceBuffer.appendBuffer(this.queue.shift());
+    _this.sourceBuffer.appendBuffer(data);
+    setTimeout(() => {
+      _this.videoPlaying.play();
+    }, 50)
   }
 
   private fetchSegment(): any {
     return fetch(`http://localhost:8080/playVideo${this.streamSegment > 0 ? '?count='+this.streamSegment : ''}`)
       .catch(() => {
-        this.enableStream = !1;
-        clearInterval(this.refreshVideo);
-        this.sourceBuffer = undefined;
-        this.mediaSource.endOfStream();
-        this.videoPlaying.pause();
+        return this.endStream();
       }).then((res: any) => res.arrayBuffer());
   }
 
   private onUpdateEnd(_this: any): void {
     if(_this.queue.length < 1 || _this.sourceBuffer.updating) return;
+    if((_this.queue?.[0]?.byteLength||0) < 10) return _this.endStream();
     _this.sourceBuffer.appendBuffer(_this.queue.shift());
-    _this.sourceBuffer.remove(0, 2);
+  }
+
+  private endStream(): void{
+    // Stream is complete or not yet started.
+    this.enableStream = !1;
+    clearInterval(this.refreshVideo);
+    this.sourceBuffer = !1;
+    this.mediaSource.endOfStream();
+    this.videoPlaying.pause();
+    return;
   }
 
   private sendMessage(messageContent: any, ws: any): boolean {
