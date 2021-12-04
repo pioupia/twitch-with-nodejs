@@ -28,14 +28,13 @@ export class StreamComponent implements OnInit {
   private refreshVideo: any;
   private readonly mime: string;
   private enableStream: boolean = !0;
-  private isScrolling: boolean;
+  public followingScroll: boolean = !0;
 
   constructor() {
     this.streamSegment = 0;
     this.queue = [];
     this.sourceBuffer = !1;
     this.mime = "video/webm; codecs=\"vp8, vorbis\"";
-    this.isScrolling = !1;
   }
 
   ngOnInit(): void {
@@ -46,6 +45,7 @@ export class StreamComponent implements OnInit {
     const params: any = document.querySelector(".params");
     this.videoPlaying = document.getElementById("videoPlaying");
     this.mediaSource = new MediaSource();
+    chatContent.onscroll = (e:any) => this.scroll(e);
 
     ws.on('ready', () => {
       this.messages.push({
@@ -65,6 +65,7 @@ export class StreamComponent implements OnInit {
         date: this.msgDate(d),
         color: message.color
       });
+      if(!this.followingScroll) return;
       setTimeout(() => {
         // Wait time for variable scrollHeight to update.
         chatContent.scroll(0, chatContent.scrollHeight);
@@ -196,5 +197,11 @@ export class StreamComponent implements OnInit {
       }
     }else this.changingColor = !this.changingColor;
     return;
+  }
+
+  private scroll(e: any): any {
+    const el = e.srcElement;
+    if(el.scrollTopMax - el.scrollTop > el.offsetHeight/3) return this.followingScroll = !1;
+    return this.followingScroll = !0;
   }
 }
