@@ -1,5 +1,5 @@
 <div class="streamContent">
-  <video id="videoPlaying" play></video>
+  <video id="videoPlaying"></video>
   <!-- Make a div to hide player interactions -->
 </div>
 <div class="chat-bar">
@@ -18,7 +18,7 @@
       </div>
     </div>
     <div class="chat-send">
-      <div *ngIf="!followingScroll" class="followScroll">
+      <div *ngIf="!followingScroll" class="followScroll" (click)="restoreScroll()">
         automatic scrolling
       </div>
       <textarea maxlength="500" placeholder="Send a message" class="messageContent" rows="1"></textarea>

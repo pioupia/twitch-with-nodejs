@@ -157,6 +157,17 @@
   }
 }
 
+.followScroll{
+  display: flex;
+  width: max-content;
+  padding: 6px 10px;
+  margin: 0 auto;
+  border-radius: 10px;
+  background: rgba(0, 0, 0, 0.53);
+  transform: translateY(-25px);
+  cursor: pointer;
+}
+
 .r-bg{
   background: var(--red-color) !important;
 }

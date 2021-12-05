@@ -170,6 +170,12 @@ export class StreamComponent implements OnInit {
     return false;
   }
 
+  public restoreScroll(){
+    this.followingScroll = !0;
+    const chatContent: any = document.querySelector(".chat-content");
+    chatContent.scroll(0, chatContent.scrollHeight);
+  }
+
   private msgDate(date: Date): string {
     return `${this.parseDate(date.getHours())}:${this.parseDate(date.getMinutes())}`;
   }
