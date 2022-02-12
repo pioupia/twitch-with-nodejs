@@ -22,3 +22,6 @@ Current pages available :
 - http://localhost:3000/
 - http://localhost:3000/channel/name
 - http://localhost:3000/panel
+
+
+https://youtu.be/35q3mQq7kUw
