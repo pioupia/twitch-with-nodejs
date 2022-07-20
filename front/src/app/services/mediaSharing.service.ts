@@ -45,7 +45,7 @@ export class mediaSharing {
 		}
 
 		// @ts-ignore
-    let mediaRecorder: any = new MediaRecorder(this.media, {"mimeType": "video/webm;"});
+    let mediaRecorder: any = new MediaRecorder(this.media, {"mimeType": "video/webm"});
 		mediaRecorder.ondataavailable = function (ev: any) {
 			chunks.push(ev.data);
 		}
@@ -61,7 +61,7 @@ export class mediaSharing {
     }, 2000);
 
     mediaRecorder.onstop = () => {
-			let blob = new Blob(chunks, {'type': 'video/webm;'});
+			let blob = new Blob(chunks, {'type': 'video/webm'});
 			chunks = [];
 			const data = new FormData();
 			data.append('file', blob);
